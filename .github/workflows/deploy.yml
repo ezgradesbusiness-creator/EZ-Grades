@@ -3,26 +3,33 @@ name: Deploy React App to GitHub Pages
 on:
   push:
     branches:
-      - main  # Deploy when main branch is updated
+      - main   # Deploy when pushing to main
+
+permissions:
+  contents: write
+  pages: write
 
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Full history required
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: 18
 
-      - run: npm ci
-      - run: npm run build
+      - name: Install dependencies
+        run: npm install
 
-      - uses: peaceiris/actions-gh-pages@v4.0.0
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.PERSONAL_TOKEN }}  # PAT with repo contents RW
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
-          force_orphan: true
