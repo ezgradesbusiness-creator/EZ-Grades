@@ -3,17 +3,20 @@ name: Deploy React App to GitHub Pages
 on:
   push:
     branches:
-      - main  # Trigger on pushes to main
+      - main
 
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout code
-      - uses: actions/checkout@v3
+      # 1️⃣ Checkout full repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history (required for gh-pages)
 
-      # 2️⃣ Set up Node.js
+      # 2️⃣ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -28,7 +31,7 @@ jobs:
         run: npm run build
 
       # 5️⃣ Deploy to GitHub Pages
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
