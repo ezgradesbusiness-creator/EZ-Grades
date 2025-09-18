@@ -10,25 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repo with full history
+      # 1️⃣ Checkout the repo
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Required for gh-pages
 
-      # Setup Node.js
+      # 2️⃣ Setup Node.js
       - uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      # Install dependencies
+      # 3️⃣ Install dependencies
       - run: npm ci
 
-      # Build the app
+      # 4️⃣ Build the app
       - run: npm run build
 
-      # Deploy to GitHub Pages
+      # 5️⃣ Deploy to GitHub Pages
       - uses: peaceiris/actions-gh-pages@v4.0.0
         with:
-          github_token: ${{ secrets.PERSONAL_TOKEN }}  # Must match your secret name
+          github_token: ${{ secrets.PERSONAL_TOKEN }}  # Your PAT
           publish_dir: ./dist
           force_orphan: true
