@@ -249,7 +249,7 @@ export default function App() {
     <SidebarProvider defaultOpen={!isMobile}>
       <div className="min-h-screen bg-gradient flex w-full">
         {/* Desktop Sidebar */}
-        {!isMobile && (
+        {!isMobile && user && (
           <Sidebar 
             currentPage={currentPage} 
             onPageChange={handlePageChange}

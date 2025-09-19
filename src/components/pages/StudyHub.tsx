@@ -116,14 +116,14 @@ export function StudyHub() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.2 }}
       >
-        {/* Certifications */}
-        {activeTab === 'certifications' && (
+        {/* Revision */}
+        {activeTab === 'revision' && (
           <div className="space-y-6">
             <GlassCard className="p-8 text-center">
               <Award className="w-16 h-16 mx-auto mb-4 text-primary-solid" />
-              <h3 className="text-xl font-medium mb-2">Certification Center</h3>
+              <h3 className="text-xl font-medium mb-2">Refine your skills</h3>
               <p className="text-muted-foreground mb-6">
-                Prepare for industry certifications with our comprehensive study materials
+                Revision made easy – study smart, practice more, and achieve your goals
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Button variant="outline" className="flex-col h-auto py-4">
@@ -143,8 +143,8 @@ export function StudyHub() {
           </div>
         )}
 
-        {/* My Courses */}
-        {activeTab === 'revision' && (
+        {/* Certifications */}
+        {activeTab === 'certifications' && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {courses.map((course, index) => (
@@ -186,7 +186,6 @@ export function StudyHub() {
                         </span>
                       </div>
                     </div>
-
                     <Button className="w-full gradient-primary text-white">
                       Continue Learning
                     </Button>

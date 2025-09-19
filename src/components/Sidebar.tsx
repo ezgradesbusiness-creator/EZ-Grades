@@ -12,7 +12,7 @@ import {
   User
 } from 'lucide-react';
 import {
-  Sidebar,
+  Sidebar as UIsidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
@@ -22,7 +22,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
   useSidebar
 } from './ui/sidebar';
 import { ThemeToggle } from './ThemeToggle';
@@ -73,7 +72,7 @@ export function Sidebar({ currentPage, onPageChange, user, onLogout }: SidebarPr
   const { state } = useSidebar();
 
   return (
-    <Sidebar 
+    <UIsidebar 
       collapsible="icon" 
       className="border-0"
       style={{
@@ -86,9 +85,13 @@ export function Sidebar({ currentPage, onPageChange, user, onLogout }: SidebarPr
           className="flex items-center gap-3"
           whileHover={{ scale: 1.02 }}
         >
-          <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center glow-primary">
-            <Focus className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center glow-primary">
+                <img 
+                  src="/src/EZ.png" 
+                  alt="EZ Grades Logo" 
+                  className="w-full h-full object-cover"/>
           </div>
+
           {state === 'expanded' && (
             <motion.div
               initial={{ opacity: 0, x: -10 }}
@@ -105,7 +108,6 @@ export function Sidebar({ currentPage, onPageChange, user, onLogout }: SidebarPr
       <SidebarContent className="px-2">
         <SidebarGroup>
           <SidebarGroupLabel className="text-sm font-medium text-muted-foreground px-2 mb-2">
-            Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
@@ -146,7 +148,6 @@ export function Sidebar({ currentPage, onPageChange, user, onLogout }: SidebarPr
                         )}
                       </motion.div>
                       
-                      {/* Hover glow effect */}
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         initial={false}
@@ -160,7 +161,6 @@ export function Sidebar({ currentPage, onPageChange, user, onLogout }: SidebarPr
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* User Profile Section */}
         <SidebarGroup className="mt-auto">
           <SidebarGroupContent>
             {state === 'expanded' && (
@@ -193,7 +193,7 @@ export function Sidebar({ currentPage, onPageChange, user, onLogout }: SidebarPr
                 </motion.button>
               </motion.div>
             )}
-            
+
             {state === 'collapsed' && (
               <div className="flex flex-col items-center gap-2 px-2 mb-4">
                 <motion.div
@@ -202,9 +202,9 @@ export function Sidebar({ currentPage, onPageChange, user, onLogout }: SidebarPr
                 >
                   <User className="w-5 h-5 text-white" />
                 </motion.div>
-                
+
                 <ThemeToggle />
-                
+
                 <motion.button
                   onClick={onLogout}
                   className="w-10 h-10 rounded-lg hover:bg-white/5 hover:glow-error/30 text-foreground/80 hover:text-foreground transition-all duration-300 flex items-center justify-center"
@@ -221,11 +221,10 @@ export function Sidebar({ currentPage, onPageChange, user, onLogout }: SidebarPr
       </SidebarContent>
 
       <SidebarFooter className="p-4">
-        {/* Collapse Toggle */}
         <div className="flex items-center justify-center">
           <SidebarToggleButton />
         </div>
       </SidebarFooter>
-    </Sidebar>
+    </UIsidebar>
   );
 }
