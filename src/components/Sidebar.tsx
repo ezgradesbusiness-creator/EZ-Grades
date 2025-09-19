@@ -25,6 +25,7 @@ import {
   useSidebar
 } from './ui/sidebar';
 import { ThemeToggle } from './ThemeToggle';
+import Logo from '../assets/EZ.png';
 
 interface User {
   id: string;
@@ -87,7 +88,7 @@ export function Sidebar({ currentPage, onPageChange, user, onLogout }: SidebarPr
         >
           <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center glow-primary">
                 <img 
-                  src="/src/EZ.png" 
+                  src={Logo}
                   alt="EZ Grades Logo" 
                   className="w-full h-full object-cover"/>
           </div>
