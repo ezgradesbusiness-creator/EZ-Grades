@@ -5,19 +5,18 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
-      '@': path.resolve(__dirname, './src'), // for local imports
+      '@': path.resolve(__dirname, './src'),
     },
   },
   build: {
     target: 'esnext',
-    outDir: 'build',
+    outDir: 'build', // output folder
   },
   server: {
     port: 3000,
     open: true,
   },
-  root: '.', // ensure Vite looks for index.html at root
-  base: '/EZ-Grades/', // must start with /
+  root: '.',                // look for index.html at root
+  base: '/EZ-Grades/',      // repo name as base path
 });
