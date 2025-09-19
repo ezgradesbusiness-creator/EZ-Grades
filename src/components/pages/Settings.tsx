@@ -16,8 +16,8 @@ import {
   Clock
 } from 'lucide-react';
 import { GlassCard } from '../GlassCard';
-import { LuxuryButton } from '../LuxuryButton';
-import { LuxuryBadge } from '../LuxuryBadge';
+import { Button } from '../Button';
+import { Badge } from '../Badge';
 import { ThemeToggle } from '../ThemeToggle';
 
 interface UserProfile {
@@ -34,15 +34,18 @@ interface User {
   id: string;
   name: string;
   email: string;
+  username: string;
 }
 
 interface SettingsProps {
   user?: User;
   onLogout?: () => void;
+  onUserUpdate?: (updatedUser: User) => void;
 }
 
-export function Settings({ user, onLogout }: SettingsProps) {
+export function Settings({ user, onLogout, onUserUpdate }: SettingsProps) {
   const [activeSection, setActiveSection] = useState('account');
+  const [username, setUsername] = useState(user?.username || 'Scholar');
   const [userProfile, setUserProfile] = useState<UserProfile>({
     name: user?.name || 'Alex Johnson',
     email: user?.email || 'alex.johnson@email.com',
@@ -103,6 +106,18 @@ export function Settings({ user, onLogout }: SettingsProps) {
       ...prev,
       [field]: value
     }));
+  };
+
+  const handleSaveChanges = () => {
+    if (user && onUserUpdate) {
+      const updatedUser: User = {
+        ...user,
+        username: username,
+        name: userProfile.name,
+        email: userProfile.email
+      };
+      onUserUpdate(updatedUser);
+    }
   };
 
   return (
@@ -174,6 +189,17 @@ export function Settings({ user, onLogout }: SettingsProps) {
                       <div className="flex-1">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
+                            <label className="block text-sm font-medium mb-2">Display Name</label>
+                            <input
+                              type="text"
+                              value={username}
+                              onChange={(e) => setUsername(e.target.value)}
+                              placeholder="Scholar"
+                              className="w-full px-4 py-2 rounded-lg bg-input-background border border-border/50 focus:border-primary-solid focus:outline-none focus:ring-2 focus:ring-primary-solid/20"
+                            />
+                            <p className="text-xs text-muted-foreground mt-1">This name appears in your dashboard welcome message</p>
+                          </div>
+                          <div>
                             <label className="block text-sm font-medium mb-2">Full Name</label>
                             <input
                               type="text"
@@ -182,21 +208,20 @@ export function Settings({ user, onLogout }: SettingsProps) {
                               className="w-full px-4 py-2 rounded-lg bg-input-background border border-border/50 focus:border-primary-solid focus:outline-none focus:ring-2 focus:ring-primary-solid/20"
                             />
                           </div>
-                          <div>
-                            <label className="block text-sm font-medium mb-2">Email</label>
-                            <input
-                              type="email"
-                              value={userProfile.email}
-                              onChange={(e) => handleProfileUpdate('email', e.target.value)}
-                              className="w-full px-4 py-2 rounded-lg bg-input-background border border-border/50 focus:border-primary-solid focus:outline-none focus:ring-2 focus:ring-primary-solid/20"
-                            />
-                          </div>
+                        </div>
+                        <div className="mt-4">
+                          <label className="block text-sm font-medium mb-2">Email</label>
+                          <input
+                            type="email"
+                            value={userProfile.email}
+                            onChange={(e) => handleProfileUpdate('email', e.target.value)}
+                            className="w-full px-4 py-2 rounded-lg bg-input-background border border-border/50 focus:border-primary-solid focus:outline-none focus:ring-2 focus:ring-primary-solid/20"
+                          />
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Stats */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div className="text-center p-4 rounded-lg bg-muted/20">
                       <div className="text-2xl font-bold text-primary-solid mb-1">
@@ -219,12 +244,12 @@ export function Settings({ user, onLogout }: SettingsProps) {
                   </div>
 
                   <div className="flex gap-3">
-                    <LuxuryButton variant="primary">
+                    <Button variant="primary" onClick={handleSaveChanges}>
                       Save Changes
-                    </LuxuryButton>
-                    <LuxuryButton variant="outline">
+                    </Button>
+                    <Button variant="outline">
                       Change Password
-                    </LuxuryButton>
+                    </Button>
                   </div>
                 </motion.div>
               )}
@@ -362,9 +387,9 @@ export function Settings({ user, onLogout }: SettingsProps) {
                   </div>
 
                   <div className="mt-6">
-                    <LuxuryButton variant="secondary">
+                    <Button variant="secondary">
                       Test Audio Settings
-                    </LuxuryButton>
+                    </Button>
                   </div>
                 </motion.div>
               )}
@@ -502,9 +527,9 @@ export function Settings({ user, onLogout }: SettingsProps) {
                       <p className="text-sm text-muted-foreground mb-4">
                         Download a copy of all your study data, progress, and achievements.
                       </p>
-                      <LuxuryButton variant="secondary" size="sm">
+                      <Button variant="secondary" size="sm">
                         Download Data
-                      </LuxuryButton>
+                      </Button>
                     </div>
 
                     <div className="p-6 rounded-lg border border-red-500/30 bg-red-500/5">
@@ -515,9 +540,9 @@ export function Settings({ user, onLogout }: SettingsProps) {
                       <p className="text-sm text-muted-foreground mb-4">
                         Permanently delete your account and all associated data. This action cannot be undone.
                       </p>
-                      <LuxuryButton variant="outline" size="sm" className="border-red-500 text-red-600 hover:bg-red-500 hover:text-white">
+                      <Button variant="outline" size="sm" className="border-red-500 text-red-600 hover:bg-red-500 hover:text-white">
                         Delete Account
-                      </LuxuryButton>
+                      </Button>
                     </div>
                   </div>
                 </motion.div>

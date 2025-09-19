@@ -25,14 +25,16 @@ import {
   SidebarTrigger,
   useSidebar
 } from './ui/sidebar';
+import { ThemeToggle } from './ThemeToggle';
 
 interface User {
   id: string;
   name: string;
   email: string;
+  username: string;
 }
 
-interface LuxurySidebarProps {
+interface SidebarProps {
   currentPage: string;
   onPageChange: (page: string) => void;
   user: User;
@@ -43,7 +45,7 @@ const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: Home },
   { id: 'break', label: 'Break Mode', icon: Coffee },
   { id: 'focus', label: 'Focus Mode', icon: Focus },
-  { id: 'courses', label: 'Courses', icon: BookOpen },
+  { id: 'studyhub', label: 'Study Hub', icon: BookOpen },
   { id: 'summary', label: 'Summary', icon: BarChart3 },
   { id: 'settings', label: 'Settings', icon: Settings },
 ];
@@ -67,7 +69,7 @@ function SidebarToggleButton() {
   );
 }
 
-export function LuxurySidebar({ currentPage, onPageChange, user, onLogout }: LuxurySidebarProps) {
+export function Sidebar({ currentPage, onPageChange, user, onLogout }: SidebarProps) {
   const { state } = useSidebar();
 
   return (
@@ -177,6 +179,7 @@ export function LuxurySidebar({ currentPage, onPageChange, user, onLogout }: Lux
                     <p className="font-medium text-sm truncate">{user.name}</p>
                     <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                   </div>
+                  <ThemeToggle />
                 </div>
                 
                 <motion.button
@@ -199,6 +202,8 @@ export function LuxurySidebar({ currentPage, onPageChange, user, onLogout }: Lux
                 >
                   <User className="w-5 h-5 text-white" />
                 </motion.div>
+                
+                <ThemeToggle />
                 
                 <motion.button
                   onClick={onLogout}

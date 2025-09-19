@@ -12,8 +12,8 @@ import {
   Shuffle
 } from 'lucide-react';
 import { GlassCard } from '../GlassCard';
-import { LuxuryButton } from '../LuxuryButton';
-import { LuxuryBadge } from '../LuxuryBadge';
+import { Button } from '../Button';
+import { Badge } from '../Badge';
 
 interface MiniGame {
   id: string;
@@ -229,13 +229,13 @@ export function BreakMode() {
                 </p>
               </div>
 
-              <LuxuryButton
+              <Button
                 variant={breathingActive ? "outline" : "secondary"}
                 onClick={() => setBreathingActive(!breathingActive)}
                 fullWidth
               >
                 {breathingActive ? 'Stop Exercise' : 'Start Breathing'}
-              </LuxuryButton>
+              </Button>
             </div>
           </GlassCard>
 
@@ -257,33 +257,33 @@ export function BreakMode() {
               </div>
               
               <h3 className="font-semibold text-lg mb-2">{currentTrack}</h3>
-              <LuxuryBadge variant="primary">Now Playing</LuxuryBadge>
+              <Badge variant="primary">Now Playing</Badge>
             </div>
 
             <div className="flex justify-center gap-3 mb-6">
-              <LuxuryButton
+              <Button
                 variant="outline"
                 size="sm"
                 onClick={shuffleTrack}
                 icon={<Shuffle className="w-4 h-4" />}
               >
                 Shuffle
-              </LuxuryButton>
-              <LuxuryButton
+              </Button>
+              <Button
                 variant="primary"
                 onClick={() => setIsPlaying(!isPlaying)}
                 icon={isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
               >
                 {isPlaying ? 'Pause' : 'Play'}
-              </LuxuryButton>
-              <LuxuryButton
+              </Button>
+              <Button
                 variant="outline"
                 size="sm"
                 onClick={nextTrack}
                 icon={<SkipForward className="w-4 h-4" />}
               >
                 Next
-              </LuxuryButton>
+              </Button>
             </div>
 
             <div className="space-y-3">
@@ -329,21 +329,21 @@ export function BreakMode() {
                 >
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="font-semibold">{game.title}</h3>
-                    <LuxuryBadge 
+                    <Badge 
                       variant={getGameCategoryColor(game.category) as any}
                       size="sm"
                     >
                       {game.category}
-                    </LuxuryBadge>
+                    </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground mb-4">
                     {game.description}
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">{game.duration}</span>
-                    <LuxuryButton size="sm" variant="outline">
+                    <Button size="sm" variant="outline">
                       Play
-                    </LuxuryButton>
+                    </Button>
                   </div>
                 </GlassCard>
               </motion.div>
@@ -375,23 +375,23 @@ export function BreakMode() {
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="font-semibold">{exercise.name}</h3>
                     <div className="flex gap-2">
-                      <LuxuryBadge 
+                      <Badge 
                         variant={getDifficultyColor(exercise.difficulty) as any}
                         size="sm"
                       >
                         {exercise.difficulty}
-                      </LuxuryBadge>
-                      <LuxuryBadge variant="secondary" size="sm">
+                      </Badge>
+                      <Badge variant="secondary" size="sm">
                         {exercise.duration}s
-                      </LuxuryBadge>
+                      </Badge>
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mb-4">
                     {exercise.description}
                   </p>
-                  <LuxuryButton size="sm" variant="secondary" fullWidth>
+                  <Button size="sm" variant="secondary" fullWidth>
                     Start Exercise
-                  </LuxuryButton>
+                  </Button>
                 </GlassCard>
               </motion.div>
             ))}

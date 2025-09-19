@@ -2,7 +2,7 @@ import { motion } from 'motion/react';
 import { ReactNode } from 'react';
 import { Loader2 } from 'lucide-react';
 
-interface LuxuryButtonProps {
+interface ButtonProps {
   children: ReactNode;
   variant?: 'primary' | 'secondary' | 'highlight' | 'glass' | 'outline';
   size?: 'sm' | 'md' | 'lg';
@@ -14,7 +14,7 @@ interface LuxuryButtonProps {
   fullWidth?: boolean;
 }
 
-export function LuxuryButton({
+export function Button({
   children,
   variant = 'primary',
   size = 'md',
@@ -24,7 +24,7 @@ export function LuxuryButton({
   loading = false,
   icon,
   fullWidth = false
-}: LuxuryButtonProps) {
+}: ButtonProps) {
   const baseClasses = `
     relative overflow-hidden rounded-xl font-medium transition-all duration-300
     focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-50

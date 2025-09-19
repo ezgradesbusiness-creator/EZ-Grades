@@ -15,8 +15,8 @@ import {
   BarChart3
 } from 'lucide-react';
 import { GlassCard } from '../GlassCard';
-import { LuxuryButton } from '../LuxuryButton';
-import { LuxuryBadge } from '../LuxuryBadge';
+import { Button } from '../Button';
+import { Badge } from '../Badge';
 import { ProgressRing } from '../ProgressRing';
 
 interface Achievement {
@@ -304,13 +304,13 @@ export function Summary() {
                         </div>
                       </div>
                       
-                      <LuxuryBadge 
+                      <Badge 
                         variant={getAchievementVariant(achievement.type) as any}
                         size="sm"
                         shimmer={achievement.unlocked}
                       >
                         {achievement.type}
-                      </LuxuryBadge>
+                      </Badge>
                     </div>
 
                     {!achievement.unlocked && achievement.progress !== undefined && achievement.target && (
@@ -393,9 +393,9 @@ export function Summary() {
                         {new Date(milestone.achievedAt).toLocaleDateString()}
                       </p>
                     </div>
-                    <LuxuryBadge variant="highlight" size="sm">
+                    <Badge variant="highlight" size="sm">
                       +{milestone.points}
-                    </LuxuryBadge>
+                    </Badge>
                   </motion.div>
                 ))}
               </div>

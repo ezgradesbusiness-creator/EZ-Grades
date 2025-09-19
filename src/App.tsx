@@ -1,21 +1,25 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { LuxurySidebar } from './components/LuxurySidebar';
+import { Sidebar } from './components/Sidebar';
+import { MobileNavigation } from './components/MobileNavigation';
+import { MobileTopNavigation } from './components/MobileTopNavigation';
 import { Dashboard } from './components/pages/Dashboard';
 import { BreakMode } from './components/pages/BreakMode';
 import { FocusMode } from './components/pages/FocusMode';
-import { Courses } from './components/pages/Courses';
+import { StudyHub } from './components/pages/StudyHub';
 import { Summary } from './components/pages/Summary';
 import { Settings } from './components/pages/Settings';
 import { Login } from './components/pages/Login';
 import { SignUp } from './components/pages/SignUp';
 import { SidebarProvider, SidebarInset } from './components/ui/sidebar';
 import { ThemeToggle } from './components/ThemeToggle';
+import { useIsMobile } from './components/ui/use-mobile';
 
 interface User {
   id: string;
   name: string;
   email: string;
+  username: string;
 }
 
 export default function App() {
@@ -23,9 +27,10 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [isLoading, setIsLoading] = useState(true);
+  const isMobile = useIsMobile();
 
   // Protected routes that require authentication
-  const protectedRoutes = ['dashboard', 'break', 'focus', 'courses', 'summary', 'settings'];
+  const protectedRoutes = ['dashboard', 'break', 'focus', 'studyhub', 'summary', 'settings'];
 
   // Check for existing session on app load
   useEffect(() => {
@@ -34,6 +39,10 @@ export default function App() {
         const savedUser = localStorage.getItem('ezgrades_user');
         if (savedUser) {
           const parsedUser = JSON.parse(savedUser);
+          // Migration: Add username field if it doesn't exist
+          if (!parsedUser.username) {
+            parsedUser.username = 'Scholar';
+          }
           setUser(parsedUser);
           setCurrentPage('dashboard');
         }
@@ -74,7 +83,8 @@ export default function App() {
       const demoUser: User = {
         id: '1',
         name: 'Demo User',
-        email: 'demo@ezgrades.com'
+        email: 'demo@ezgrades.com',
+        username: 'Scholar'
       };
       setUser(demoUser);
       setCurrentPage('dashboard');
@@ -83,7 +93,8 @@ export default function App() {
       const newUser: User = {
         id: Math.random().toString(36).substr(2, 9),
         name: email.split('@')[0],
-        email: email
+        email: email,
+        username: 'Scholar'
       };
       setUser(newUser);
       setCurrentPage('dashboard');
@@ -95,7 +106,8 @@ export default function App() {
     const googleUser: User = {
       id: 'google_' + Math.random().toString(36).substr(2, 9),
       name: 'Google User',
-      email: 'user@gmail.com'
+      email: 'user@gmail.com',
+      username: 'Scholar'
     };
     setUser(googleUser);
     setCurrentPage('dashboard');
@@ -106,7 +118,8 @@ export default function App() {
     const newUser: User = {
       id: Math.random().toString(36).substr(2, 9),
       name: name,
-      email: email
+      email: email,
+      username: 'Scholar'
     };
     setUser(newUser);
     setCurrentPage('dashboard');
@@ -115,6 +128,10 @@ export default function App() {
   const handleLogout = () => {
     setUser(null);
     setCurrentPage('login');
+  };
+
+  const handleUserUpdate = (updatedUser: User) => {
+    setUser(updatedUser);
   };
 
   const renderPage = () => {
@@ -154,24 +171,24 @@ export default function App() {
     // Authenticated user pages
     switch (currentPage) {
       case 'dashboard':
-        return <Dashboard />;
+        return <Dashboard user={user} />;
       case 'break':
         return <BreakMode />;
       case 'focus':
         return <FocusMode />;
-      case 'courses':
-        return <Courses />;
+      case 'studyhub':
+        return <StudyHub />;
       case 'summary':
         return <Summary />;
       case 'settings':
-        return <Settings onLogout={handleLogout} user={user} />;
+        return <Settings onLogout={handleLogout} user={user} onUserUpdate={handleUserUpdate} />;
       // If user is authenticated but on auth page, redirect to dashboard
       case 'login':
       case 'signup':
         setCurrentPage('dashboard');
-        return <Dashboard />;
+        return <Dashboard user={user} />;
       default:
-        return <Dashboard />;
+        return <Dashboard user={user} />;
     }
   };
 
@@ -229,20 +246,23 @@ export default function App() {
 
   // Authenticated user gets full app with sidebar
   return (
-    <SidebarProvider defaultOpen={true}>
+    <SidebarProvider defaultOpen={!isMobile}>
       <div className="min-h-screen bg-gradient flex w-full">
-        <LuxurySidebar 
-          currentPage={currentPage} 
-          onPageChange={handlePageChange}
-          user={user}
-          onLogout={handleLogout}
-        />
+        {/* Desktop Sidebar */}
+        {!isMobile && (
+          <Sidebar 
+            currentPage={currentPage} 
+            onPageChange={handlePageChange}
+            user={user}
+            onLogout={handleLogout}
+          />
+        )}
         
         <SidebarInset className="bg-transparent relative">
-          {/* Theme Toggle in Top Right */}
-          <div className="fixed top-4 right-4 z-50">
-            <ThemeToggle />
-          </div>
+          {/* Mobile Top Navigation */}
+          {isMobile && user && (
+            <MobileTopNavigation user={user} />
+          )}
           
           <AnimatePresence mode="wait">
             <motion.main
@@ -251,11 +271,21 @@ export default function App() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="w-full"
+              className={`w-full ${isMobile ? 'pt-20' : ''}`}
             >
               {renderPage()}
             </motion.main>
           </AnimatePresence>
+
+          {/* Mobile Navigation */}
+          {isMobile && user && (
+            <MobileNavigation
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+              user={user}
+              onLogout={handleLogout}
+            />
+          )}
         </SidebarInset>
       </div>
     </SidebarProvider>
