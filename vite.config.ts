@@ -19,5 +19,5 @@ export default defineConfig({
     open: true,
   },
   root: '.', // ensure Vite looks for index.html at root
-  base: '/', // must start with /
+  base: '/EZ-Grades/', // must start with /
 });
