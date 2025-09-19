@@ -1,197 +1,167 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { 
-  BookOpen, 
+  Headphones, 
   Play, 
-  Clock, 
-  Star, 
-  Users, 
-  Award,
-  ChevronRight,
-  Filter,
-  Search,
-  TrendingUp
+  Pause, 
+  SkipForward, 
+  Volume2, 
+  Gamepad2,
+  Dumbbell,
+  Coffee,
+  Shuffle
 } from 'lucide-react';
 import { GlassCard } from '../GlassCard';
-import { LuxuryButton } from '../LuxuryButton';
-import { LuxuryBadge } from '../LuxuryBadge';
-import { ProgressRing } from '../ProgressRing';
+import { Button } from '../Button';
+import { Badge } from '../Badge';
 
-interface Course {
+interface MiniGame {
   id: string;
   title: string;
-  instructor: string;
-  category: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  duration: string;
-  progress: number;
-  rating: number;
-  students: number;
-  thumbnail: string;
   description: string;
-  lessons: number;
+  duration: string;
+  category: 'memory' | 'puzzle' | 'reflex';
 }
 
-interface Quiz {
+interface StretchExercise {
   id: string;
-  title: string;
-  questions: number;
-  timeLimit: number;
-  difficulty: string;
-  category: string;
-  completed: boolean;
-  score?: number;
+  name: string;
+  duration: number;
+  description: string;
+  difficulty: 'easy' | 'medium' | 'hard';
 }
 
-export function Courses() {
-  const [activeTab, setActiveTab] = useState<'courses' | 'quizzes' | 'certificates'>('courses');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+export function BreakMode() {
+  const [breathingActive, setBreathingActive] = useState(false);
+  const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'hold' | 'exhale'>('inhale');
+  const [breathingTimer, setBreathingTimer] = useState(0);
+  const [currentTrack, setCurrentTrack] = useState('Relaxing Piano');
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolumeLevel] = useState(70);
 
-  const courses: Course[] = [
+  const miniGames: MiniGame[] = [
     {
       id: '1',
-      title: 'Advanced JavaScript Concepts',
-      instructor: 'Dr. Sarah Chen',
-      category: 'Programming',
-      difficulty: 'advanced',
-      duration: '8 hours',
-      progress: 65,
-      rating: 4.8,
-      students: 12453,
-      thumbnail: '💻',
-      description: 'Master advanced JavaScript concepts including closures, prototypes, and async programming.',
-      lessons: 24
+      title: 'Memory Cards',
+      description: 'Match pairs of cards to improve memory',
+      duration: '3-5 min',
+      category: 'memory'
     },
     {
       id: '2',
-      title: 'Data Structures & Algorithms',
-      instructor: 'Prof. Michael Johnson',
-      category: 'Computer Science',
-      difficulty: 'intermediate',
-      duration: '12 hours',
-      progress: 30,
-      rating: 4.9,
-      students: 8976,
-      thumbnail: '📊',
-      description: 'Learn fundamental data structures and algorithms for efficient problem solving.',
-      lessons: 36
+      title: 'Quick Math',
+      description: 'Solve simple equations quickly',
+      duration: '2-3 min',
+      category: 'puzzle'
     },
     {
       id: '3',
-      title: 'Machine Learning Fundamentals',
-      instructor: 'Dr. Emily Rodriguez',
-      category: 'AI/ML',
-      difficulty: 'beginner',
-      duration: '15 hours',
-      progress: 90,
-      rating: 4.7,
-      students: 15432,
-      thumbnail: '🤖',
-      description: 'Introduction to machine learning concepts, algorithms, and practical applications.',
-      lessons: 42
+      title: 'Color Match',
+      description: 'Match colors as fast as you can',
+      duration: '1-2 min',
+      category: 'reflex'
     },
     {
       id: '4',
-      title: 'Modern Web Design',
-      instructor: 'Alex Thompson',
-      category: 'Design',
-      difficulty: 'intermediate',
-      duration: '10 hours',
-      progress: 0,
-      rating: 4.6,
-      students: 9876,
-      thumbnail: '🎨',
-      description: 'Learn modern web design principles, UI/UX best practices, and design systems.',
-      lessons: 28
+      title: 'Word Puzzle',
+      description: 'Find words in a letter grid',
+      duration: '5-7 min',
+      category: 'puzzle'
     }
   ];
 
-  const quizzes: Quiz[] = [
+  const stretchExercises: StretchExercise[] = [
     {
       id: '1',
-      title: 'JavaScript ES6+ Features',
-      questions: 25,
-      timeLimit: 30,
-      difficulty: 'Intermediate',
-      category: 'Programming',
-      completed: true,
-      score: 88
+      name: 'Neck Rolls',
+      duration: 30,
+      description: 'Gently roll your neck in circles',
+      difficulty: 'easy'
     },
     {
       id: '2',
-      title: 'React Hooks Deep Dive',
-      questions: 20,
-      timeLimit: 25,
-      difficulty: 'Advanced',
-      category: 'Programming',
-      completed: false
+      name: 'Shoulder Shrugs',
+      duration: 20,
+      description: 'Lift shoulders up and release tension',
+      difficulty: 'easy'
     },
     {
       id: '3',
-      title: 'CSS Grid & Flexbox',
-      questions: 15,
-      timeLimit: 20,
-      difficulty: 'Beginner',
-      category: 'Design',
-      completed: true,
-      score: 92
+      name: 'Spinal Twist',
+      duration: 45,
+      description: 'Rotate your spine while seated',
+      difficulty: 'medium'
     },
     {
       id: '4',
-      title: 'Python Data Analysis',
-      questions: 30,
-      timeLimit: 45,
-      difficulty: 'Intermediate',
-      category: 'Data Science',
-      completed: false
+      name: 'Eye Movement',
+      duration: 15,
+      description: 'Focus far and near to rest your eyes',
+      difficulty: 'easy'
     }
   ];
 
-  const certificates = [
-    {
-      id: '1',
-      title: 'Full Stack Web Development',
-      issuer: 'TechAcademy',
-      completedDate: '2024-01-15',
-      validity: 'Lifetime',
-      skills: ['React', 'Node.js', 'MongoDB', 'Express.js']
-    },
-    {
-      id: '2',
-      title: 'Advanced JavaScript Programming',
-      issuer: 'CodeMaster Institute',
-      completedDate: '2023-12-10',
-      validity: '2 years',
-      skills: ['ES6+', 'Async Programming', 'Design Patterns']
-    },
-    {
-      id: '3',
-      title: 'UI/UX Design Fundamentals',
-      issuer: 'Design Academy',
-      completedDate: '2023-11-22',
-      validity: 'Lifetime',
-      skills: ['Figma', 'User Research', 'Prototyping', 'Design Systems']
-    }
+  const relaxingTracks = [
+    'Relaxing Piano',
+    'Nature Sounds',
+    'Meditation Bell',
+    'Ocean Waves',
+    'Forest Rain',
+    'Ambient Space'
   ];
 
-  const categories = ['all', 'Programming', 'Design', 'Data Science', 'AI/ML', 'Computer Science'];
+  // Breathing exercise logic
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (breathingActive) {
+      interval = setInterval(() => {
+        setBreathingTimer((prev) => {
+          if (breathingPhase === 'inhale' && prev >= 4) {
+            setBreathingPhase('hold');
+            return 0;
+          } else if (breathingPhase === 'hold' && prev >= 7) {
+            setBreathingPhase('exhale');
+            return 0;
+          } else if (breathingPhase === 'exhale' && prev >= 8) {
+            setBreathingPhase('inhale');
+            return 0;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [breathingActive, breathingPhase]);
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty.toLowerCase()) {
-      case 'beginner': return 'secondary';
-      case 'intermediate': return 'highlight';
-      case 'advanced': return 'error';
+  const getGameCategoryColor = (category: string) => {
+    switch (category) {
+      case 'memory': return 'primary';
+      case 'puzzle': return 'secondary';
+      case 'reflex': return 'highlight';
       default: return 'primary';
     }
   };
 
-  const filteredCourses = courses.filter(course => {
-    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         course.instructor.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || course.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'easy': return 'secondary';
+      case 'medium': return 'highlight';
+      case 'hard': return 'error';
+      default: return 'primary';
+    }
+  };
+
+  const nextTrack = () => {
+    const currentIndex = relaxingTracks.indexOf(currentTrack);
+    const nextIndex = (currentIndex + 1) % relaxingTracks.length;
+    setCurrentTrack(relaxingTracks[nextIndex]);
+  };
+
+  const shuffleTrack = () => {
+    const otherTracks = relaxingTracks.filter(track => track !== currentTrack);
+    const randomTrack = otherTracks[Math.floor(Math.random() * otherTracks.length)];
+    setCurrentTrack(randomTrack);
+  };
 
   return (
     <div className="min-h-screen pb-8 px-4 pt-8">
@@ -204,277 +174,229 @@ export function Courses() {
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-4xl font-bold mb-2">
-            <span className="text-gradient-highlight">Learning Hub</span> 📚
+            <span className="text-gradient-secondary">Break Time</span> ☕
           </h1>
-          <p className="text-lg text-muted-foreground">Expand your knowledge with expert-led courses</p>
+          <p className="text-lg text-muted-foreground">Recharge your mind and body</p>
         </motion.div>
 
-        {/* Tabs */}
-        <div className="flex justify-center mb-8">
-          <div className="glass-card p-2 flex gap-2">
-            {[
-              { id: 'courses', label: 'Courses', icon: BookOpen },
-              { id: 'quizzes', label: 'Quizzes', icon: Play },
-              { id: 'certificates', label: 'Certificates', icon: Award }
-            ].map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <motion.button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`
-                    px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center gap-2
-                    ${activeTab === tab.id
-                      ? 'gradient-primary text-white shadow-lg'
-                      : 'hover:bg-white/10 text-foreground/80 hover:text-foreground'
-                    }
-                  `}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Breathing Guide */}
+          <GlassCard size="lg" gradient="secondary">
+            <div className="text-center">
+              <h2 className="text-xl font-semibold mb-6 text-gradient-secondary">
+                Breathing Exercise
+              </h2>
+              
+              <div className="relative mb-8">
+                <motion.div
+                  className="w-32 h-32 mx-auto rounded-full gradient-secondary flex items-center justify-center relative overflow-hidden"
+                  animate={{
+                    scale: breathingActive 
+                      ? breathingPhase === 'inhale' ? 1.2 
+                        : breathingPhase === 'hold' ? 1.2 
+                        : 0.8
+                      : 1
+                  }}
+                  transition={{ 
+                    duration: breathingPhase === 'inhale' ? 4 
+                            : breathingPhase === 'hold' ? 7 
+                            : 8,
+                    ease: 'easeInOut'
+                  }}
                 >
-                  <Icon className="w-4 h-4" />
-                  {tab.label}
-                </motion.button>
-              );
-            })}
-          </div>
+                  <div className="text-white font-semibold text-center">
+                    <div className="text-lg capitalize">{breathingPhase}</div>
+                    <div className="text-2xl">{breathingTimer}s</div>
+                  </div>
+                </motion.div>
+                
+                {breathingActive && (
+                  <motion.div
+                    className="absolute inset-0 rounded-full"
+                    animate={{ 
+                      boxShadow: `0 0 ${20 + breathingTimer * 5}px rgba(46, 215, 176, 0.4)` 
+                    }}
+                  />
+                )}
+              </div>
+
+              <div className="mb-6">
+                <p className="text-sm text-muted-foreground mb-2">
+                  4-7-8 Breathing Technique
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Inhale for 4s, Hold for 7s, Exhale for 8s
+                </p>
+              </div>
+
+              <Button
+                variant={breathingActive ? "outline" : "secondary"}
+                onClick={() => setBreathingActive(!breathingActive)}
+                fullWidth
+              >
+                {breathingActive ? 'Stop Exercise' : 'Start Breathing'}
+              </Button>
+            </div>
+          </GlassCard>
+
+          {/* Music Player */}
+          <GlassCard size="lg">
+            <h2 className="text-xl font-semibold mb-6 text-gradient-primary">
+              <Headphones className="inline w-5 h-5 mr-2" />
+              Relaxing Sounds
+            </h2>
+            
+            <div className="text-center mb-6">
+              <div className="w-24 h-24 mx-auto rounded-full gradient-primary flex items-center justify-center mb-4">
+                <motion.div
+                  animate={{ rotate: isPlaying ? 360 : 0 }}
+                  transition={{ duration: 20, repeat: isPlaying ? Infinity : 0, ease: 'linear' }}
+                >
+                  <Volume2 className="w-8 h-8 text-white" />
+                </motion.div>
+              </div>
+              
+              <h3 className="font-semibold text-lg mb-2">{currentTrack}</h3>
+              <Badge variant="primary">Now Playing</Badge>
+            </div>
+
+            <div className="flex justify-center gap-3 mb-6">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={shuffleTrack}
+                icon={<Shuffle className="w-4 h-4" />}
+              >
+                Shuffle
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => setIsPlaying(!isPlaying)}
+                icon={isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+              >
+                {isPlaying ? 'Pause' : 'Play'}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={nextTrack}
+                icon={<SkipForward className="w-4 h-4" />}
+              >
+                Next
+              </Button>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-sm">
+                <span>Volume</span>
+                <span>{volume}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={volume}
+                onChange={(e) => setVolumeLevel(Number(e.target.value))}
+                className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
+              />
+            </div>
+          </GlassCard>
         </div>
 
-        {/* Courses Tab */}
-        {activeTab === 'courses' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            {/* Search and Filter */}
-            <div className="flex flex-col md:flex-row gap-4 mb-8">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Search courses..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-lg glass-card border-none focus:glow-primary transition-all duration-300"
-                />
-              </div>
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-3 rounded-lg glass-card border-none focus:glow-primary transition-all duration-300"
-              >
-                {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category === 'all' ? 'All Categories' : category}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Course Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredCourses.map((course, index) => (
-                <motion.div
-                  key={course.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <GlassCard className="h-full" gradient="primary">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="w-12 h-12 rounded-lg gradient-primary flex items-center justify-center text-2xl">
-                        {course.thumbnail}
-                      </div>
-                      <LuxuryBadge 
-                        variant={getDifficultyColor(course.difficulty) as any}
-                        size="sm"
-                      >
-                        {course.difficulty}
-                      </LuxuryBadge>
-                    </div>
-
-                    <h3 className="font-semibold text-lg mb-2">{course.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-3">by {course.instructor}</p>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                      {course.description}
-                    </p>
-
-                    <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        {course.duration}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <BookOpen className="w-4 h-4" />
-                        {course.lessons} lessons
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Users className="w-4 h-4" />
-                        {course.students.toLocaleString()}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm font-medium">{course.rating}</span>
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        ({course.students.toLocaleString()} students)
-                      </div>
-                    </div>
-
-                    {course.progress > 0 && (
-                      <div className="mb-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm text-muted-foreground">Progress</span>
-                          <span className="text-sm font-medium">{course.progress}%</span>
-                        </div>
-                        <div className="w-full bg-muted rounded-full h-2">
-                          <motion.div
-                            className="gradient-primary h-2 rounded-full"
-                            initial={{ width: 0 }}
-                            animate={{ width: `${course.progress}%` }}
-                            transition={{ duration: 1, delay: index * 0.1 }}
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    <LuxuryButton
-                      variant={course.progress > 0 ? 'secondary' : 'primary'}
-                      fullWidth
-                      icon={course.progress > 0 ? <Play className="w-4 h-4" /> : <BookOpen className="w-4 h-4" />}
-                    >
-                      {course.progress > 0 ? 'Continue Learning' : 'Start Course'}
-                    </LuxuryButton>
-                  </GlassCard>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Quizzes Tab */}
-        {activeTab === 'quizzes' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-          >
-            {quizzes.map((quiz, index) => (
+        {/* Mini Games */}
+        <motion.div 
+          className="mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+        >
+          <div className="flex items-center gap-3 mb-6">
+            <Gamepad2 className="w-6 h-6 text-highlight-solid" />
+            <h2 className="text-2xl font-semibold text-gradient-highlight">Quick Games</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {miniGames.map((game, index) => (
               <motion.div
-                key={quiz.id}
+                key={game.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <GlassCard 
+                  gradient={getGameCategoryColor(game.category) as any}
+                  className="h-full"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="font-semibold">{game.title}</h3>
+                    <Badge 
+                      variant={getGameCategoryColor(game.category) as any}
+                      size="sm"
+                    >
+                      {game.category}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    {game.description}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">{game.duration}</span>
+                    <Button size="sm" variant="outline">
+                      Play
+                    </Button>
+                  </div>
+                </GlassCard>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Stretch Prompts */}
+        <motion.div 
+          className="mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+        >
+          <div className="flex items-center gap-3 mb-6">
+            <Dumbbell className="w-6 h-6 text-secondary-solid" />
+            <h2 className="text-2xl font-semibold text-gradient-secondary">Quick Stretches</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {stretchExercises.map((exercise, index) => (
+              <motion.div
+                key={exercise.id}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
                 <GlassCard gradient="secondary">
-                  <div className="flex items-start justify-between mb-4">
-                    <h3 className="font-semibold text-lg">{quiz.title}</h3>
-                    <LuxuryBadge 
-                      variant={quiz.completed ? 'secondary' : 'highlight'}
-                      size="sm"
-                    >
-                      {quiz.completed ? 'Completed' : 'Available'}
-                    </LuxuryBadge>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-4 mb-4 text-sm">
-                    <div className="text-center">
-                      <div className="font-semibold">{quiz.questions}</div>
-                      <div className="text-muted-foreground">Questions</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="font-semibold">{quiz.timeLimit}m</div>
-                      <div className="text-muted-foreground">Time Limit</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="font-semibold">{quiz.difficulty}</div>
-                      <div className="text-muted-foreground">Difficulty</div>
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="font-semibold">{exercise.name}</h3>
+                    <div className="flex gap-2">
+                      <Badge 
+                        variant={getDifficultyColor(exercise.difficulty) as any}
+                        size="sm"
+                      >
+                        {exercise.difficulty}
+                      </Badge>
+                      <Badge variant="secondary" size="sm">
+                        {exercise.duration}s
+                      </Badge>
                     </div>
                   </div>
-
-                  {quiz.completed && quiz.score && (
-                    <div className="mb-4 p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-green-700 dark:text-green-300">
-                          Your Score
-                        </span>
-                        <span className="text-lg font-bold text-green-700 dark:text-green-300">
-                          {quiz.score}%
-                        </span>
-                      </div>
-                    </div>
-                  )}
-
-                  <LuxuryButton
-                    variant={quiz.completed ? 'outline' : 'secondary'}
-                    fullWidth
-                    icon={<Play className="w-4 h-4" />}
-                  >
-                    {quiz.completed ? 'Retake Quiz' : 'Start Quiz'}
-                  </LuxuryButton>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-
-        {/* Certificates Tab */}
-        {activeTab === 'certificates' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {certificates.map((cert, index) => (
-              <motion.div
-                key={cert.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <GlassCard gradient="highlight" className="text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full gradient-highlight flex items-center justify-center">
-                    <Award className="w-8 h-8 text-white" />
-                  </div>
-                  
-                  <h3 className="font-semibold text-lg mb-2">{cert.title}</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Issued by {cert.issuer}
+                    {exercise.description}
                   </p>
-                  
-                  <div className="space-y-2 mb-4">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Completed:</span>
-                      <span>{new Date(cert.completedDate).toLocaleDateString()}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Valid:</span>
-                      <span>{cert.validity}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-1 mb-4">
-                    {cert.skills.map((skill, skillIndex) => (
-                      <LuxuryBadge key={skillIndex} variant="highlight" size="sm">
-                        {skill}
-                      </LuxuryBadge>
-                    ))}
-                  </div>
-
-                  <LuxuryButton variant="highlight" size="sm" fullWidth>
-                    View Certificate
-                  </LuxuryButton>
+                  <Button size="sm" variant="secondary" fullWidth>
+                    Start Exercise
+                  </Button>
                 </GlassCard>
               </motion.div>
             ))}
-          </motion.div>
-        )}
+          </div>
+        </motion.div>
       </div>
     </div>
   );

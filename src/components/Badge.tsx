@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { ReactNode } from 'react';
 
-interface LuxuryBadgeProps {
+interface BadgeProps {
   children: ReactNode;
   variant?: 'primary' | 'secondary' | 'highlight' | 'success' | 'warning' | 'error';
   size?: 'sm' | 'md' | 'lg';
@@ -11,7 +11,7 @@ interface LuxuryBadgeProps {
   count?: number;
 }
 
-export function LuxuryBadge({
+export function Badge({
   children,
   variant = 'primary',
   size = 'md',
@@ -19,7 +19,7 @@ export function LuxuryBadge({
   shimmer = false,
   icon,
   count
-}: LuxuryBadgeProps) {
+}: BadgeProps) {
   const baseClasses = `
     inline-flex items-center gap-1.5 rounded-full font-medium
     transition-all duration-300 relative overflow-hidden

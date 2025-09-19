@@ -3,7 +3,7 @@
 :root {
   --font-size: 16px;
   
-  /* Luxury Light Mode Colors */
+  /*  Light Mode Colors */
   --background: linear-gradient(135deg, #FFF8F0, #F2EDE6);
   --background-solid: #FFF8F0;
   --foreground: #2A2A2A;
@@ -13,9 +13,9 @@
   --popover: #FFFFFF;
   --popover-foreground: #2A2A2A;
   
-  /* Luxury Gradient Colors */
-  --primary: linear-gradient(135deg, #7D4AE1, #5B33C9);
-  --primary-solid: #7D4AE1;
+  /*  Gradient Colors */
+  --primary: linear-gradient(135deg, #65528b, #ab9dc6);
+  --primary-solid: #a99cc2;
   --primary-foreground: #FFFFFF;
   --secondary: linear-gradient(135deg, #3AB0A0, #2B7D7D);
   --secondary-solid: #3AB0A0;
@@ -48,7 +48,7 @@
   --radius: 1rem;
   --sidebar: #FFFFFF;
   --sidebar-foreground: #2A2A2A;
-  --sidebar-primary: #7D4AE1;
+  --sidebar-primary: #b79fe8;
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #F9F5F2;
   --sidebar-accent-foreground: #2A2A2A;
@@ -57,7 +57,7 @@
 }
 
 .dark {
-  /* Luxury Dark Mode Colors */
+  /*  Dark Mode Colors */
   --background: linear-gradient(135deg, #0B1B2F, #142B44);
   --background-solid: #0B1B2F;
   --foreground: #E8E8E8;
@@ -67,7 +67,7 @@
   --popover: #1C2A3D;
   --popover-foreground: #E8E8E8;
   
-  /* Luxury Gradient Colors - Dark Mode */
+  /*  Gradient Colors - Dark Mode */
   --primary: linear-gradient(135deg, #5B6EE1, #3B4FC9);
   --primary-solid: #5B6EE1;
   --primary-foreground: #FFFFFF;
@@ -198,7 +198,7 @@
   
   /* Glow Effects */
   .glow-primary {
-    box-shadow: 0 0 20px rgba(125, 74, 225, 0.3);
+    box-shadow: 0 0 20px rgba(119, 59, 239, 0.3);
   }
   
   .glow-secondary {

@@ -3,8 +3,8 @@ import { motion } from 'motion/react';
 import { Play, Pause, Square, Plus, BookOpen, Target, TrendingUp, Star } from 'lucide-react';
 import { GlassCard } from '../GlassCard';
 import { ProgressRing } from '../ProgressRing';
-import { LuxuryButton } from '../LuxuryButton';
-import { LuxuryBadge } from '../LuxuryBadge';
+import { Button } from '../Button';
+import { Badge } from '../Badge';
 import { unsplash_tool } from '../../tools/unsplash';
 
 interface Task {
@@ -14,7 +14,18 @@ interface Task {
   priority: 'high' | 'medium' | 'low';
 }
 
-export function Dashboard() {
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  username: string;
+}
+
+interface DashboardProps {
+  user: User;
+}
+
+export function Dashboard({ user }: DashboardProps) {
   const [currentTime, setCurrentTime] = useState(25 * 60); // 25 minutes in seconds
   const [isRunning, setIsRunning] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([
@@ -97,7 +108,7 @@ export function Dashboard() {
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-4xl font-bold mb-2">
-            Welcome back, <span className="text-gradient-primary">Scholar</span>
+            Welcome back, <span className="text-gradient-primary">{user.username}</span>
           </h1>
           <p className="text-lg text-muted-foreground">Ready to make today productive?</p>
         </motion.div>
@@ -162,20 +173,20 @@ export function Dashboard() {
               </div>
 
               <div className="flex gap-3 justify-center">
-                <LuxuryButton
+                <Button
                   variant="primary"
                   onClick={handleTimerToggle}
                   icon={isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                 >
                   {isRunning ? 'Pause' : 'Start'}
-                </LuxuryButton>
-                <LuxuryButton
+                </Button>
+                <Button
                   variant="outline"
                   onClick={handleTimerReset}
                   icon={<Square className="w-4 h-4" />}
                 >
                   Reset
-                </LuxuryButton>
+                </Button>
               </div>
             </GlassCard>
           </div>
@@ -185,9 +196,9 @@ export function Dashboard() {
             <GlassCard size="lg">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-semibold text-gradient-primary">Today's Tasks</h2>
-                <LuxuryBadge variant="highlight" count={totalTasks - completedTasks}>
+                <Badge variant="highlight" count={totalTasks - completedTasks}>
                   Remaining
-                </LuxuryBadge>
+                </Badge>
               </div>
 
               {/* Add Task */}
@@ -200,13 +211,13 @@ export function Dashboard() {
                   className="flex-1 px-4 py-2 rounded-lg bg-input-background border border-border/50 focus:border-primary-solid focus:outline-none focus:ring-2 focus:ring-primary-solid/20 transition-all duration-300"
                   onKeyPress={(e) => e.key === 'Enter' && addTask()}
                 />
-                <LuxuryButton
+                <Button
                   variant="primary"
                   onClick={addTask}
                   icon={<Plus className="w-4 h-4" />}
                 >
                   Add
-                </LuxuryButton>
+                </Button>
               </div>
 
               {/* Task List */}
@@ -234,12 +245,12 @@ export function Dashboard() {
                     <span className={`flex-1 ${task.completed ? 'line-through text-muted-foreground' : ''}`}>
                       {task.title}
                     </span>
-                    <LuxuryBadge 
+                    <Badge 
                       variant={getPriorityColor(task.priority) as any}
                       size="sm"
                     >
                       {task.priority}
-                    </LuxuryBadge>
+                    </Badge>
                   </motion.div>
                 ))}
               </div>

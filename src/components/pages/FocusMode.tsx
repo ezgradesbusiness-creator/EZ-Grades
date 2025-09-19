@@ -14,8 +14,8 @@ import {
 } from 'lucide-react';
 import { GlassCard } from '../GlassCard';
 import { ProgressRing } from '../ProgressRing';
-import { LuxuryButton } from '../LuxuryButton';
-import { LuxuryBadge } from '../LuxuryBadge';
+import { Button } from '../Button';
+import { Badge } from '../Badge';
 
 interface AmbientSound {
   id: string;
@@ -158,16 +158,16 @@ export function FocusMode() {
                 </div>
 
                 <div className="space-y-3">
-                  <LuxuryButton
+                  <Button
                     variant="primary"
                     onClick={() => setIsTimerRunning(!isTimerRunning)}
                     fullWidth
                     icon={isTimerRunning ? <Timer className="w-4 h-4" /> : <Zap className="w-4 h-4" />}
                   >
                     {isTimerRunning ? 'Pause Focus' : 'Start Focus'}
-                  </LuxuryButton>
+                  </Button>
                   
-                  <LuxuryButton
+                  <Button
                     variant="outline"
                     onClick={() => {
                       setIsTimerRunning(false);
@@ -176,7 +176,7 @@ export function FocusMode() {
                     fullWidth
                   >
                     Reset Timer
-                  </LuxuryButton>
+                  </Button>
                 </div>
               </div>
             </GlassCard>
@@ -209,20 +209,20 @@ export function FocusMode() {
               </p>
 
               <div className="flex items-center justify-between">
-                <LuxuryBadge 
+                <Badge 
                   variant={distractionBlockEnabled ? 'secondary' : 'error'}
                   size="sm"
                 >
                   {distractionBlockEnabled ? 'Active' : 'Inactive'}
-                </LuxuryBadge>
-                <LuxuryButton
+                </Badge>
+                <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setShowBlockedSites(!showBlockedSites)}
                   icon={showBlockedSites ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 >
                   {showBlockedSites ? 'Hide' : 'Show'} Sites
-                </LuxuryButton>
+                </Button>
               </div>
 
               {showBlockedSites && (
@@ -323,9 +323,9 @@ export function FocusMode() {
                 <Users className="w-5 h-5 text-primary-solid" />
                 <h2 className="text-xl font-semibold text-gradient-primary">Study Together Room</h2>
               </div>
-              <LuxuryBadge variant="primary" count={studyRoomParticipants.length}>
+              <Badge variant="primary" count={studyRoomParticipants.length}>
                 Online
-              </LuxuryBadge>
+              </Badge>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -353,12 +353,12 @@ export function FocusMode() {
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <LuxuryBadge 
+                    <Badge 
                       variant={getStatusBadge(participant.status) as any}
                       size="sm"
                     >
                       {participant.status}
-                    </LuxuryBadge>
+                    </Badge>
                     <span className="text-xs text-muted-foreground">
                       {Math.floor(participant.studyTime / 60)}h {participant.studyTime % 60}m
                     </span>
@@ -368,9 +368,9 @@ export function FocusMode() {
             </div>
 
             <div className="mt-6 text-center">
-              <LuxuryButton variant="primary" icon={<Users className="w-4 h-4" />}>
+              <Button variant="primary" icon={<Users className="w-4 h-4" />}>
                 Join Study Room
-              </LuxuryButton>
+              </Button>
             </div>
           </GlassCard>
         </motion.div>
