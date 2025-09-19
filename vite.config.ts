@@ -10,20 +10,7 @@ export default defineConfig({
     },
   },
   build: {
-<<<<<<< HEAD
-    target: 'esnext',
-    outDir: 'build', // output folder
-    emptyOutDir: true,
-  },
-  server: {
-    port: 3000,
-    open: true,
-  },
-  root: '.',                // look for index.html at root
-  base: '/EZ-Grades/',      // repo name as base path
-=======
     outDir: 'build',
   },
-  base: '/EZ-Grades/', // <-- Must match your repo name
->>>>>>> 882fa42 (Stage changes before rebase)
+  base: '/EZ-Grades/',
 });
