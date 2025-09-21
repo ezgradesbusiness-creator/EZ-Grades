@@ -10,3 +10,5 @@ build/
 
 # Optional cache
 .cache/
+
+.env.local
