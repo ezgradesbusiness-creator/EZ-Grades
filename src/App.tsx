@@ -101,13 +101,12 @@ export default function App() {
     }
   };
 
-  const handleGoogleAuth = () => {
-    // Simulate Google OAuth - in real app, this would integrate with Google OAuth
+  const handleGoogleAuth = (userData: { name: string; email: string; profilePicture?: string }) => {
     const googleUser: User = {
       id: 'google_' + Math.random().toString(36).substr(2, 9),
-      name: 'Google User',
-      email: 'user@gmail.com',
-      username: 'Scholar'
+      name: userData.name,
+      email: userData.email,
+      username: userData.name.split(' ')[0] || 'Scholar'
     };
     setUser(googleUser);
     setCurrentPage('dashboard');
@@ -177,7 +176,7 @@ export default function App() {
       case 'focus':
         return <FocusMode />;
       case 'studyhub':
-        return <StudyHub />;
+        return <StudyHub user={user} />;
       case 'summary':
         return <Summary />;
       case 'settings':
@@ -249,7 +248,7 @@ export default function App() {
     <SidebarProvider defaultOpen={!isMobile}>
       <div className="min-h-screen bg-gradient flex w-full">
         {/* Desktop Sidebar */}
-        {!isMobile && user && (
+        {!isMobile && (
           <Sidebar 
             currentPage={currentPage} 
             onPageChange={handlePageChange}

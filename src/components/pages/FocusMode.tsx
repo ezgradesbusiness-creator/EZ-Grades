@@ -10,12 +10,16 @@ import {
   Zap,
   Eye,
   EyeOff,
-  Settings
+  Settings,
+  Play,
+  Minus,
+  Plus
 } from 'lucide-react';
 import { GlassCard } from '../GlassCard';
 import { ProgressRing } from '../ProgressRing';
 import { Button } from '../Button';
 import { Badge } from '../Badge';
+import { FocusSession } from '../FocusSession';
 
 interface AmbientSound {
   id: string;
@@ -35,7 +39,9 @@ interface StudyRoomParticipant {
 
 export function FocusMode() {
   const [focusTimer, setFocusTimer] = useState(50 * 60); // 50 minutes
+  const [focusDuration, setFocusDuration] = useState(50); // Duration in minutes for fullscreen session
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [isFullscreenSession, setIsFullscreenSession] = useState(false);
   const [distractionBlockEnabled, setDistractionBlockEnabled] = useState(false);
   const [showBlockedSites, setShowBlockedSites] = useState(false);
   
@@ -113,6 +119,17 @@ export function FocusMode() {
     }
   };
 
+  // Show fullscreen focus session
+  if (isFullscreenSession) {
+    return (
+      <FocusSession
+        initialDuration={focusDuration}
+        onEnd={() => setIsFullscreenSession(false)}
+        onCancel={() => setIsFullscreenSession(false)}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen pb-8 px-4 pt-8">
       <div className="max-w-7xl mx-auto">
@@ -139,6 +156,33 @@ export function FocusMode() {
                   Focus Session
                 </h2>
                 
+                {/* Duration Selector for Fullscreen Focus */}
+                <div className="mb-6">
+                  <p className="text-sm text-muted-foreground mb-3">Set focus duration</p>
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <motion.button
+                      onClick={() => setFocusDuration(Math.max(5, focusDuration - 5))}
+                      className="glass-card p-2 rounded-lg hover:glow-primary transition-all duration-300"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Minus className="w-4 h-4" />
+                    </motion.button>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-foreground">{focusDuration}</div>
+                      <div className="text-xs text-muted-foreground">minutes</div>
+                    </div>
+                    <motion.button
+                      onClick={() => setFocusDuration(Math.min(180, focusDuration + 5))}
+                      className="glass-card p-2 rounded-lg hover:glow-primary transition-all duration-300"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Plus className="w-4 h-4" />
+                    </motion.button>
+                  </div>
+                </div>
+                
                 <div className="mb-6">
                   <ProgressRing 
                     progress={focusProgress} 
@@ -160,20 +204,29 @@ export function FocusMode() {
                 <div className="space-y-3">
                   <Button
                     variant="primary"
+                    onClick={() => setIsFullscreenSession(true)}
+                    fullWidth
+                    icon={<Play className="w-4 h-4" />}
+                  >
+                    Start Fullscreen Focus
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
                     onClick={() => setIsTimerRunning(!isTimerRunning)}
                     fullWidth
                     icon={isTimerRunning ? <Timer className="w-4 h-4" /> : <Zap className="w-4 h-4" />}
                   >
-                    {isTimerRunning ? 'Pause Focus' : 'Start Focus'}
+                    {isTimerRunning ? 'Pause Focus' : 'Start Normal Focus'}
                   </Button>
                   
                   <Button
                     variant="outline"
                     onClick={() => {
                       setIsTimerRunning(false);
-                      setFocusTimer(50 * 60);
+                      setFocusTimer(focusDuration * 60);
                     }}
-                    fullWidth
+                    size="sm"
                   >
                     Reset Timer
                   </Button>
