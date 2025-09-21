@@ -11,4 +11,4 @@ build/
 # Optional cache
 .cache/
 
-.env.local
+.env.local/
